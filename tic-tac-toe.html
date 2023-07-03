@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tic Tac Toe</title>
+    <style>
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            width: 300px;
+        }
+        .cell {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 2px solid black;
+            cursor: pointer;
+            font-size: 32px;
+            font-weight: bold;
+            height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="board">
+            <div class="cell"></div>
+            <div class="cell"></div>
+            <div class="cell"></div>
+            <div class="cell"></div>
+            <div class="cell"></div>
+            <div class="cell"></div>
+            <div class="cell"></div>
+            <div class="cell"></div>
+            <div class="cell"></div>
+        </div>
+    </div>
+
+    <script>
+        const cells = document.querySelectorAll('.cell');
+        let currentPlayer = 'X';
+        let gameFinished = false;
+
+        function handleCellClick(e) {
+            if (!gameFinished && !e.target.textContent) {
+                e.target.textContent = currentPlayer;
+                e.target.classList.add(currentPlayer === 'X' ? 'x' : 'o');
+
+                if (checkWinCondition()) {
+                    announceWinner();
+                    gameFinished = true;
+                } else if (checkDrawCondition()) {
+                    announceDraw();
+                    gameFinished = true;
+                } else {
+                    currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+                }
+            }
+        }
+
+        function checkWinCondition() {
+            const winConditions = [
+                [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
+                [0, 3, 6], [1, 4, 7], [2, 5, 8], // columns
+                [0, 4, 8], [2, 4, 6] // diagonals
+            ];
+
+            for (let condition of winConditions) {
+                const [a, b, c] = condition;
+                if (
+                    cells[a].textContent &&
+                    cells[a].textContent === cells[b].textContent &&
+                    cells[a].textContent === cells[c].textContent
+                ) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        function checkDrawCondition() {
+            for (let cell of cells) {
+                if (!cell.textContent) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        function announceWinner() {
+            alert(`Player ${currentPlayer} wins!`);
+        }
+
+        function announceDraw() {
+            alert("It's a draw!");
+        }
+
+        cells.forEach(cell => {
+            cell.addEventListener('click', handleCellClick);
+        });
+    </script>
+</body>
+</html>
